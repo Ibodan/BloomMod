@@ -1,9 +1,9 @@
 # BloomMod
 BeatSaber bloom effect modification plugin
 
-Modifies internal bloom effect parameters of each cameras in-game.
+Customize internal bloom effect parameters of each cameras in-game.
 It is mainly for appling proper or enhanced bloom on CameraPlus's 3rd person camera and MultiView's extra camera.
-But you can also modify bloom effect in HMD.
+But you can also modify bloom effect of your HMD view.
 
 ### Install
 
@@ -20,8 +20,8 @@ You can modify values and saving the file immediately takes effect in game.
 
 ### Hint
 
-Only on <key>TextureHeight/Width</key>, < 1.0 value used to compute texture size by scaling render target width/height rather raw count of pixels. 
-For section [BloomMod!Camera Plus], just set both <b>TextureHeight/Width</b> to 0.25.
+Only on <key>TextureHeight/Width</key>, value < 1.0 used to compute texture size by scaling render target width/height rather raw count of pixels. 
+For observing mod effects quick, try set both <b>TextureHeight/Width</b> to 0.25 in section [BloomMod!Camera Plus].
 
 ### Restore defaults
 

@@ -11,11 +11,12 @@ namespace BloomMod
 	public class Plugin : IPlugin
 	{
 		public string Name => "BloomMod";
-		public string Version => "1.0.0";
+		public string Version => "1.0.1";
 
 		private Prefs prefs = new Prefs();
 		private bool prefsChangeEventRegistered = false;
 		private bool resetMode = false;
+		private Coroutine co = null;
 
 		public void OnApplicationStart()
 		{
@@ -34,13 +35,15 @@ namespace BloomMod
 		{
 			if (scene.buildIndex < 2) return;
 
+			if (co != null) SharedCoroutineStarter.instance.StopCoroutine(co);
+
 			if (resetMode)
 			{
-				SharedCoroutineStarter.instance.StartCoroutine(resetEffectParamsCoroutine());
+				co = SharedCoroutineStarter.instance.StartCoroutine(resetEffectParamsCoroutine());
 			}
 			else
 			{
-				SharedCoroutineStarter.instance.StartCoroutine(modifyEffectParamsCoroutine());
+				co = SharedCoroutineStarter.instance.StartCoroutine(modifyEffectParamsCoroutine());
 			}
 		}
 

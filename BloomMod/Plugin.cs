@@ -11,12 +11,13 @@ namespace BloomMod
 	public class Plugin : IPlugin
 	{
 		public string Name => "BloomMod";
-		public string Version => "1.0.1";
+		public string Version => "1.0.2";
 
 		private Prefs prefs = new Prefs();
 		private bool prefsChangeEventRegistered = false;
 		private bool resetMode = false;
 		private Coroutine co = null;
+		private GameScenesManager scenesManager;
 
 		public void OnApplicationStart()
 		{
@@ -28,13 +29,21 @@ namespace BloomMod
 		public void OnApplicationQuit()
 		{
 			SceneManager.sceneLoaded -= SceneManager_sceneLoaded;
+			if (scenesManager != null) scenesManager.transitionDidFinishEvent -= SceneTransitionDidFinish;
 			if (resetMode) prefs.DoneReset();
 		}
 
 		private void SceneManager_sceneLoaded(Scene scene, LoadSceneMode mode)
 		{
-			if (scene.buildIndex < 2) return;
+			if (scenesManager == null)
+			{
+				scenesManager = Resources.FindObjectsOfTypeAll<GameScenesManager>().FirstOrDefault();
+				if (scenesManager != null) scenesManager.transitionDidFinishEvent += SceneTransitionDidFinish;
+			}
+		}
 
+		private void SceneTransitionDidFinish()
+		{
 			if (co != null) SharedCoroutineStarter.instance.StopCoroutine(co);
 
 			if (resetMode)
@@ -80,7 +89,7 @@ namespace BloomMod
 
 				var efx = c.gameObject.GetComponent<MainEffect>();
 				if (efx == null) continue;
-				var param = ReflectionUtil.GetPrivateField<MainEffectParams>(efx, "_params");
+				var param = ReflectionUtil.GetPrivateField<MainEffectParams>(efx, "_mainEffectParams");
 				if (param == null) continue;
 				param = UnityEngine.Object.Instantiate(param);
 				var modParams = prefs.LoadForCamera(c.name);
@@ -90,16 +99,18 @@ namespace BloomMod
 				param.bloomIntensity = modParams.bloomIntensity;
 				param.bloomIterations = modParams.bloomIterations;
 
-				param.textureHeight = (modParams.textureHeight <= 1.0 && c.targetTexture != null) ?
-					(int)(c.targetTexture.height * modParams.textureHeight) :
-					param.textureHeight = (int)modParams.textureHeight;
+				param.textureHeight = (modParams.textureHeight <= 1.0)
+					? (int)(c.pixelHeight * modParams.textureHeight) 
+					: (int)modParams.textureHeight;
 
-				param.textureWidth = (modParams.textureWidth <= 1.0 && c.targetTexture != null) ?
-					(int)(c.targetTexture.width * modParams.textureWidth) :
-					param.textureWidth = (int)modParams.textureWidth;
+				param.textureWidth = (modParams.textureWidth <= 1.0) 
+					? (int)(c.pixelWidth * modParams.textureWidth) 
+					: (int)modParams.textureWidth;
 
-				ReflectionUtil.SetPrivateField(efx, "_params", param);
-				Plugin.Log("set: " + c.name);
+				ReflectionUtil.SetPrivateField(efx, "_mainEffectParams", param);
+				var efxRenderer = efx.GetComponent<MainEffectRenderer>();
+				if (efxRenderer) ReflectionUtil.SetPrivateField(efxRenderer, "_mainEffectParams", param);
+				Plugin.Log($"set: {c.name} ({c.pixelWidth} => {param.textureWidth}, {c.pixelHeight} => {param.textureHeight})");
 			}
 		}
 
@@ -117,7 +128,7 @@ namespace BloomMod
 					if (flags.ContainsKey(c.name)) continue;
 					var efx = c.gameObject.GetComponent<MainEffect>();
 					if (efx == null) continue;
-					var param = ReflectionUtil.GetPrivateField<MainEffectParams>(efx, "_params");
+					var param = ReflectionUtil.GetPrivateField<MainEffectParams>(efx, "_mainEffectParams");
 					if (param == null) continue;
 					var resetParams = new Prefs.Params();
 					resetParams.baseColorBoost = param.baseColorBoost;

@@ -2,7 +2,7 @@
 BeatSaber bloom effect modification plugin
 
 Customize internal bloom effect parameters of each cameras in-game.
-It is mainly for appling proper or enhanced bloom on CameraPlus's 3rd person camera and MultiView's extra camera.
+It is mainly for applying proper or enhanced bloom on CameraPlus's 3rd person camera and MultiView's extra camera.
 But you can also modify bloom effect of your HMD view.
 
 ### Install
@@ -11,7 +11,7 @@ put dll into Plugins directory
 
 ### Intialize config file with default value
 
-First, start BeatSaber and play any map for seconds and quit.
+First, start BeatSaber and **play any map for seconds** and quit.
 
 ### Modify config file
 

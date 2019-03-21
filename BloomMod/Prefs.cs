@@ -13,10 +13,8 @@ namespace BloomMod
 		{
 			public float baseColorBoost = 1.2f;
 			public float baseColorBoostThreshold = 0.05f;
-			public float bloomAlphaWeightScale = 1.0f;
 			public float bloomIntensity = 0.6f;
 			public int bloomIterations = 4;
-			public float textureHeight = 1024.0f;
 			public float textureWidth = 2028.0f;
 		}
 
@@ -60,10 +58,8 @@ namespace BloomMod
 		{
 			ModPrefs.SetFloat(SECTIONBASE + "!" + cameraName, "BaseColorBoost", resetParams.baseColorBoost);
 			ModPrefs.SetFloat(SECTIONBASE + "!" + cameraName, "BaseColorBoostThreshold", resetParams.baseColorBoostThreshold);
-			ModPrefs.SetFloat(SECTIONBASE + "!" + cameraName, "BloomAlphaWeightScale", resetParams.bloomAlphaWeightScale);
 			ModPrefs.SetFloat(SECTIONBASE + "!" + cameraName, "BloomIntensity", resetParams.bloomIntensity);
 			ModPrefs.SetInt(SECTIONBASE + "!" + cameraName, "BloomIterations", resetParams.bloomIterations);
-			ModPrefs.SetFloat(SECTIONBASE + "!" + cameraName, "TextureHeight", resetParams.textureHeight);
 			ModPrefs.SetFloat(SECTIONBASE + "!" + cameraName, "TextureWidth", resetParams.textureWidth);
 		}
 
@@ -92,10 +88,8 @@ namespace BloomMod
 
 			ret.baseColorBoost = ModPrefs.GetFloat(SECTIONBASE + "!" + cameraName, "BaseColorBoost", defaults.baseColorBoost);
 			ret.baseColorBoostThreshold = ModPrefs.GetFloat(SECTIONBASE + "!" + cameraName, "BaseColorBoostThreshold", defaults.baseColorBoostThreshold);
-			ret.bloomAlphaWeightScale = ModPrefs.GetFloat(SECTIONBASE + "!" + cameraName, "BloomAlphaWeightScale", defaults.bloomAlphaWeightScale);
 			ret.bloomIntensity = ModPrefs.GetFloat(SECTIONBASE + "!" + cameraName, "BloomIntensity", defaults.bloomIntensity);
 			ret.bloomIterations = ModPrefs.GetInt(SECTIONBASE + "!" + cameraName, "BloomIterations", defaults.bloomIterations);
-			ret.textureHeight = ModPrefs.GetFloat(SECTIONBASE + "!" + cameraName, "TextureHeight", defaults.textureHeight);
 			ret.textureWidth = ModPrefs.GetFloat(SECTIONBASE + "!" + cameraName, "TextureWidth", defaults.textureWidth);
 
 			return ret;

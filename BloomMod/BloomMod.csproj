@@ -71,4 +71,8 @@
     <Compile Include="ReflectionUtil.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>"C:\Users\kataho\Desktop\beat saber workspace\PluginVersionSetter.exe" $(ProjectDir)Properties\AssemblyInfo.cs $(ProjectDir)Plugin.cs
+</PreBuildEvent>
+  </PropertyGroup>
 </Project>

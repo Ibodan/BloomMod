@@ -11,7 +11,7 @@ namespace BloomMod
 	public class Plugin : IPlugin
 	{
 		public string Name => "BloomMod";
-		public string Version => "1.0.2";
+		public string Version => "1.0.3";
 
 		private Prefs prefs = new Prefs();
 		private bool prefsChangeEventRegistered = false;
@@ -93,24 +93,19 @@ namespace BloomMod
 				if (param == null) continue;
 				param = UnityEngine.Object.Instantiate(param);
 				var modParams = prefs.LoadForCamera(c.name);
-				param.baseColorBoost = modParams.baseColorBoost;
-				param.baseColorBoostThreshold = modParams.baseColorBoostThreshold;
-				param.bloomAlphaWeightScale = modParams.bloomAlphaWeightScale;
-				param.bloomIntensity = modParams.bloomIntensity;
-				param.bloomIterations = modParams.bloomIterations;
-
-				param.textureHeight = (modParams.textureHeight <= 1.0)
-					? (int)(c.pixelHeight * modParams.textureHeight) 
-					: (int)modParams.textureHeight;
-
-				param.textureWidth = (modParams.textureWidth <= 1.0) 
+				ReflectionUtil.SetPrivateField(param, "_baseColorBoost", modParams.baseColorBoost);
+				ReflectionUtil.SetPrivateField(param, "_baseColorBoostThreshold", modParams.baseColorBoostThreshold);
+				ReflectionUtil.SetPrivateField(param, "_bloomIntensity", modParams.bloomIntensity);
+				ReflectionUtil.SetPrivateField(param, "_bloomIterations", modParams.bloomIterations);
+				ReflectionUtil.SetPrivateField(param, "_textureWidth", 
+					(modParams.textureWidth <= 1.0) 
 					? (int)(c.pixelWidth * modParams.textureWidth) 
-					: (int)modParams.textureWidth;
+					: (int)modParams.textureWidth);
 
 				ReflectionUtil.SetPrivateField(efx, "_mainEffectParams", param);
 				var efxRenderer = efx.GetComponent<MainEffectRenderer>();
 				if (efxRenderer) ReflectionUtil.SetPrivateField(efxRenderer, "_mainEffectParams", param);
-				Plugin.Log($"set: {c.name} ({c.pixelWidth} => {param.textureWidth}, {c.pixelHeight} => {param.textureHeight})");
+				Plugin.Log($"set: {c.name} ({c.pixelWidth} => {param.textureWidth})");
 			}
 		}
 
@@ -133,10 +128,8 @@ namespace BloomMod
 					var resetParams = new Prefs.Params();
 					resetParams.baseColorBoost = param.baseColorBoost;
 					resetParams.baseColorBoostThreshold = param.baseColorBoostThreshold;
-					resetParams.bloomAlphaWeightScale = param.bloomAlphaWeightScale;
 					resetParams.bloomIntensity = param.bloomIntensity;
 					resetParams.bloomIterations = param.bloomIterations;
-					resetParams.textureHeight = param.textureHeight;
 					resetParams.textureWidth = param.textureWidth;
 					prefs.Reset(c.name, resetParams);
 					flags.Add(c.name, true);
